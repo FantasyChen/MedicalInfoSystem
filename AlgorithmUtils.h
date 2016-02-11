@@ -11,7 +11,7 @@ public:
 	}
 	~AlgorithmUtils(){};
 	static double calcHeterogeneity(vtkImageData* rawImageData);
-
+	static vtkImageData* calcSmallesetEffectRegion(vtkImageData* rawImageData);
 private:
 
 };

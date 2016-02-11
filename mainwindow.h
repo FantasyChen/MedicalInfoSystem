@@ -12,6 +12,8 @@
 #include <QVBoxLayout>
 #include <ROISegmentation.h>
 #include "QMessageBox"
+#include "volumewindow.h"
+#include <thread>
 
 #include <vtkSmartPointer.h>
 #include <vtkObjectFactory.h>
@@ -59,7 +61,8 @@
 #include "vtkSelectPolyData.h"
 #include "vtkPolyDataToImageStencil.h"
 #include "vtkCubeSource.h"
-
+#include "vtkOutputWindow.h"
+#include "vtkFileOutputWindow.h"
 /*
 This class basically derived from QMainWindow and so once generated, 
 it will provide the basic window for GUI.Not only many basic application 
@@ -95,8 +98,11 @@ private slots:
 	void ChangeToRGBColorMap(int mode);
 	void CalcHeterogeneity();
 	void ShowAbout();
+	void ShowVolumeWindow();
+	void HideVolumeWindow();
 
 private:
+	volumewindow* _vWindow; 
 	QString _imageDir;
 	DCMReader *pDCM;
 	bool isFileDisplayed;
@@ -111,7 +117,6 @@ private:
 	double imageRange[2];
 	Ui::mainwindowClass ui;
 	int colorMode;
-	
 	void OutputError(int errorType);
 	void ReadImageDir();
 	void LassoROIExtract();

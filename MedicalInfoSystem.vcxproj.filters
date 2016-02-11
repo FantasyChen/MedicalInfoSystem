@@ -56,6 +56,24 @@
     <ClCompile Include="AlgorithmUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="volumewindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_volumewindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_volumewindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="progressbase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_progressbase.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_progressbase.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="mainwindow.h">
@@ -63,6 +81,21 @@
     </CustomBuild>
     <CustomBuild Include="mainwindow.ui">
       <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="volumewindow.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="volumewindow.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="progressbase.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="progressbase.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="itkQtAdaptor.h">
+      <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -80,6 +113,12 @@
     </ClInclude>
     <ClInclude Include="AlgorithmUtils.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_volumewindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_progressbase.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

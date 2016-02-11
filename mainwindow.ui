@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1596</width>
-    <height>900</height>
+    <width>1390</width>
+    <height>850</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1596</width>
-    <height>900</height>
+    <width>800</width>
+    <height>600</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>1596</width>
-    <height>900</height>
+    <width>1390</width>
+    <height>850</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -30,441 +30,527 @@
     <normaloff>Resources/icon.png</normaloff>Resources/icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QTableWidget" name="infoTable">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>30</y>
-      <width>291</width>
-      <height>301</height>
-     </rect>
-    </property>
-    <attribute name="horizontalHeaderDefaultSectionSize">
-     <number>200</number>
-    </attribute>
-    <row>
-     <property name="text">
-      <string>patientName</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>patientID</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>patientSex</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>patientAge</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>studyDate</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>modality</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>manufacturer</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>institution</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>model</string>
-     </property>
-    </row>
-    <column>
-     <property name="text">
-      <string>Value</string>
-     </property>
-    </column>
-   </widget>
-   <widget class="QGroupBox" name="groupBox">
-    <property name="geometry">
-     <rect>
-      <x>1260</x>
-      <y>30</y>
-      <width>161</width>
-      <height>91</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Mode Selection</string>
-    </property>
-    <widget class="QCheckBox" name="ThickModeBox">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>20</y>
-       <width>81</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Thick Mode</string>
-     </property>
-     <property name="tristate">
-      <bool>false</bool>
-     </property>
-    </widget>
-    <widget class="QCheckBox" name="ResliceModeBox">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>40</y>
-       <width>111</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Reslice Mode</string>
-     </property>
-    </widget>
-    <widget class="QCheckBox" name="ColorModeBox">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>60</y>
-       <width>101</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Color Mode</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QPushButton" name="resetButton">
-    <property name="geometry">
-     <rect>
-      <x>1450</x>
-      <y>50</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Reset</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="addSeedButton">
-    <property name="geometry">
-     <rect>
-      <x>1260</x>
-      <y>140</y>
-      <width>131</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Add Point</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>1260</x>
-      <y>170</y>
-      <width>101</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Current Point:</string>
-    </property>
-   </widget>
-   <widget class="QTextBrowser" name="seedTextBrowser">
-    <property name="geometry">
-     <rect>
-      <x>1270</x>
-      <y>190</y>
-      <width>256</width>
-      <height>192</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="removeSeedButton">
-    <property name="geometry">
-     <rect>
-      <x>1400</x>
-      <y>140</y>
-      <width>131</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Remove Point</string>
-    </property>
-   </widget>
-   <widget class="QGroupBox" name="SegmentationGroupBox">
-    <property name="geometry">
-     <rect>
-      <x>1270</x>
-      <y>400</y>
-      <width>251</width>
-      <height>161</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Auto-Segmentation Toolbox</string>
-    </property>
-    <widget class="QRadioButton" name="regionRadioButton">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>30</y>
-       <width>141</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Growing Region</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="thresholdRadioButton">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>70</y>
-       <width>101</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Thresholding</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="segStartButton">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>110</y>
-       <width>131</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Start Segmentation</string>
-     </property>
-    </widget>
-   </widget>
    <widget class="QGroupBox" name="groupBox_2">
     <property name="geometry">
      <rect>
-      <x>440</x>
-      <y>20</y>
-      <width>781</width>
-      <height>851</height>
+      <x>350</x>
+      <y>10</y>
+      <width>1071</width>
+      <height>751</height>
      </rect>
     </property>
     <property name="title">
      <string>Viewer</string>
     </property>
-    <widget class="QVTKWidget" name="qvtkWidget_4" native="true">
+    <widget class="QVTKWidget" name="qvtkWidget_3">
      <property name="geometry">
       <rect>
-       <x>400</x>
-       <y>430</y>
-       <width>351</width>
-       <height>381</height>
+       <x>720</x>
+       <y>40</y>
+       <width>341</width>
+       <height>681</height>
       </rect>
      </property>
     </widget>
-    <widget class="QVTKWidget" name="qvtkWidget_3" native="true">
+    <widget class="QVTKWidget" name="qvtkWidget">
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>430</y>
-       <width>351</width>
-       <height>381</height>
+       <y>40</y>
+       <width>341</width>
+       <height>681</height>
       </rect>
      </property>
     </widget>
-    <widget class="QVTKWidget" name="qvtkWidget" native="true">
+    <widget class="QVTKWidget" name="qvtkWidget_2">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>30</y>
-       <width>351</width>
-       <height>381</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QVTKWidget" name="qvtkWidget_2" native="true">
-     <property name="geometry">
-      <rect>
-       <x>400</x>
-       <y>30</y>
-       <width>351</width>
-       <height>381</height>
+       <x>370</x>
+       <y>40</y>
+       <width>341</width>
+       <height>681</height>
       </rect>
      </property>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox_3">
+   <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>1270</x>
-      <y>590</y>
-      <width>251</width>
-      <height>201</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Mannual-Segmentation Toolbox</string>
-    </property>
-    <widget class="QRadioButton" name="pointRadioButton">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>30</y>
-       <width>141</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Point By Point</string>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="boxStencilRadioButton">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>70</y>
-       <width>141</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Box Stencil</string>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="segStartButton_2">
-     <property name="geometry">
-      <rect>
-       <x>50</x>
-       <y>150</y>
-       <width>131</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Start Segmentation</string>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="ElliStencilRadioButton">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>110</y>
-       <width>141</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Ellipsoid Stencil</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QTableWidget" name="stateTable">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>420</y>
+      <x>10</x>
+      <y>10</y>
       <width>331</width>
-      <height>271</height>
+      <height>751</height>
      </rect>
     </property>
-    <attribute name="horizontalHeaderDefaultSectionSize">
-     <number>200</number>
-    </attribute>
-    <row>
-     <property name="text">
-      <string>Min</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>Max</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>Mean</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>StandardDeviation</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>Voxel Count</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>Current Voxel</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>Current Voxel Value</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>Heterogeneity</string>
-     </property>
-    </row>
-    <column>
-     <property name="text">
-      <string>Value</string>
-     </property>
-    </column>
-   </widget>
-   <widget class="QCommandLinkButton" name="calcHerterButton">
-    <property name="geometry">
-     <rect>
-      <x>60</x>
-      <y>730</y>
-      <width>251</width>
-      <height>41</height>
-     </rect>
+    <property name="tabPosition">
+     <enum>QTabWidget::West</enum>
     </property>
-    <property name="layoutDirection">
-     <enum>Qt::LeftToRight</enum>
+    <property name="tabShape">
+     <enum>QTabWidget::Triangular</enum>
     </property>
-    <property name="text">
-     <string>Calculate Heterogeneity</string>
+    <property name="currentIndex">
+     <number>1</number>
     </property>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>Basic</string>
+     </attribute>
+     <widget class="QTableWidget" name="infoTable">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>291</width>
+        <height>301</height>
+       </rect>
+      </property>
+      <attribute name="horizontalHeaderDefaultSectionSize">
+       <number>200</number>
+      </attribute>
+      <row>
+       <property name="text">
+        <string>patientName</string>
+       </property>
+      </row>
+      <row>
+       <property name="text">
+        <string>patientID</string>
+       </property>
+      </row>
+      <row>
+       <property name="text">
+        <string>patientSex</string>
+       </property>
+      </row>
+      <row>
+       <property name="text">
+        <string>patientAge</string>
+       </property>
+      </row>
+      <row>
+       <property name="text">
+        <string>studyDate</string>
+       </property>
+      </row>
+      <row>
+       <property name="text">
+        <string>modality</string>
+       </property>
+      </row>
+      <row>
+       <property name="text">
+        <string>manufacturer</string>
+       </property>
+      </row>
+      <row>
+       <property name="text">
+        <string>institution</string>
+       </property>
+      </row>
+      <row>
+       <property name="text">
+        <string>model</string>
+       </property>
+      </row>
+      <column>
+       <property name="text">
+        <string>Value</string>
+       </property>
+      </column>
+     </widget>
+     <widget class="QTableWidget" name="stateTable">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>350</y>
+        <width>291</width>
+        <height>271</height>
+       </rect>
+      </property>
+      <attribute name="horizontalHeaderDefaultSectionSize">
+       <number>200</number>
+      </attribute>
+      <row>
+       <property name="text">
+        <string>Min</string>
+       </property>
+      </row>
+      <row>
+       <property name="text">
+        <string>Max</string>
+       </property>
+      </row>
+      <row>
+       <property name="text">
+        <string>Mean</string>
+       </property>
+      </row>
+      <row>
+       <property name="text">
+        <string>StandardDeviation</string>
+       </property>
+      </row>
+      <row>
+       <property name="text">
+        <string>Voxel Count</string>
+       </property>
+      </row>
+      <row>
+       <property name="text">
+        <string>Current Voxel</string>
+       </property>
+      </row>
+      <row>
+       <property name="text">
+        <string>Current Voxel Value</string>
+       </property>
+      </row>
+      <row>
+       <property name="text">
+        <string>Heterogeneity</string>
+       </property>
+      </row>
+      <column>
+       <property name="text">
+        <string>Value</string>
+       </property>
+      </column>
+     </widget>
+     <widget class="QCommandLinkButton" name="calcHerterButton">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>690</y>
+        <width>251</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="text">
+       <string>Calculate Heterogeneity</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>Settings</string>
+     </attribute>
+     <widget class="QGroupBox" name="groupBox">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>20</y>
+        <width>231</width>
+        <height>141</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Mode Selection</string>
+      </property>
+      <widget class="QCheckBox" name="ThickModeBox">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>20</y>
+         <width>81</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Thick Mode</string>
+       </property>
+       <property name="tristate">
+        <bool>false</bool>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="ResliceModeBox">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>40</y>
+         <width>111</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Reslice Mode</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="ColorModeBox">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>60</y>
+         <width>101</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Color Mode</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="resetButton">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>90</y>
+         <width>161</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Reset</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_4">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>180</y>
+        <width>231</width>
+        <height>111</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Volume Window</string>
+      </property>
+      <widget class="QPushButton" name="vWindonShowButton">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>20</y>
+         <width>171</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Show</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="vWindowHideButton">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>60</y>
+         <width>171</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Hide</string>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_5">
+     <attribute name="title">
+      <string>Segmentation</string>
+     </attribute>
+     <widget class="QPushButton" name="addSeedButton">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>40</y>
+        <width>131</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Add Point</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="removeSeedButton">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>40</y>
+        <width>131</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Remove Point</string>
+      </property>
+     </widget>
+     <widget class="QTextBrowser" name="seedTextBrowser">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>90</y>
+        <width>256</width>
+        <height>192</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QTabWidget" name="tabWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>310</y>
+        <width>221</width>
+        <height>191</height>
+       </rect>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tab_3">
+       <attribute name="title">
+        <string>Auto</string>
+       </attribute>
+       <widget class="QGroupBox" name="SegmentationGroupBox">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>10</y>
+          <width>211</width>
+          <height>161</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Auto-Segmentation Toolbox</string>
+        </property>
+        <widget class="QRadioButton" name="regionRadioButton">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>30</y>
+           <width>141</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Growing Region</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+        <widget class="QRadioButton" name="thresholdRadioButton">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>70</y>
+           <width>101</width>
+           <height>16</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Thresholding</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="segStartButton">
+         <property name="geometry">
+          <rect>
+           <x>40</x>
+           <y>110</y>
+           <width>131</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Start Segmentation</string>
+         </property>
+        </widget>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tab_4">
+       <attribute name="title">
+        <string>Manual</string>
+       </attribute>
+       <widget class="QGroupBox" name="groupBox_3">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>10</y>
+          <width>211</width>
+          <height>151</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Mannual-Segmentation Toolbox</string>
+        </property>
+        <widget class="QRadioButton" name="pointRadioButton">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>30</y>
+           <width>141</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Point By Point</string>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+        <widget class="QRadioButton" name="boxStencilRadioButton">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>50</y>
+           <width>141</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Box Stencil</string>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="segStartButton_2">
+         <property name="geometry">
+          <rect>
+           <x>40</x>
+           <y>110</y>
+           <width>131</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Start Segmentation</string>
+         </property>
+        </widget>
+        <widget class="QRadioButton" name="ElliStencilRadioButton">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>70</y>
+           <width>141</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Ellipsoid Stencil</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>70</y>
+        <width>101</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Current Point:</string>
+      </property>
+     </widget>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -472,7 +558,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1596</width>
+     <width>1390</width>
      <height>23</height>
     </rect>
    </property>

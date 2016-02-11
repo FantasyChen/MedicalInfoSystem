@@ -21,7 +21,9 @@ double AlgorithmUtils::calcHeterogeneity(vtkImageData* rawImageData){
 	double hetero_Deno_Weight = 0;
 	double hetero_Deno_Main = 0;
 
-
+	double theresholdValue = 0;
+	double theresholdPercent = 0.3; //define the theresholdPercent
+	double maxValue = 0;
 	double curVoxel = 0;
 	double calcVoxel = 0;
 	double spacingRatioZ = imageSpacing[2] / imageSpacing[0];
@@ -36,6 +38,7 @@ double AlgorithmUtils::calcHeterogeneity(vtkImageData* rawImageData){
 				curVoxel = rawImageData->GetScalarComponentAsDouble(i, j, k, 0);
 				//suppose the empty space to be zero
 				if (curVoxel != 0) {
+					maxValue = curVoxel > maxValue ? curVoxel : maxValue;
 					voxelNum++;
 					totalValue += curVoxel;
 				}
@@ -46,14 +49,14 @@ double AlgorithmUtils::calcHeterogeneity(vtkImageData* rawImageData){
 		}
 	}
 	meanValue = totalValue / voxelNum;
-
-
+	theresholdValue = maxValue * theresholdPercent;
+	
 	for (int i = imageExtent[0]; i <= imageExtent[1]; i++){
 		for (int j = imageExtent[2]; j <= imageExtent[3]; j++){
 			for (int k = imageExtent[4]; k <= imageExtent[5]; k++){
 				curVoxel = rawImageData->GetScalarComponentAsDouble(i, j, k, 0);
 				//suppose the empty space to be zero
-				if (curVoxel != 0) { 
+				if (curVoxel >= theresholdValue) { 
 					hetero_Num_Cur = curVoxel - meanValue;
 					hetero_Deno_Main += hetero_Num_Cur * hetero_Num_Cur;
 					//case up (i,j,k++)       
@@ -113,4 +116,9 @@ double AlgorithmUtils::calcHeterogeneity(vtkImageData* rawImageData){
 	}
 	hetero_Deno = hetero_Deno_Main * hetero_Deno_Weight / voxelNum;
 	return hetero_Num / hetero_Deno;
+}
+
+
+vtkImageData* AlgorithmUtils::calcSmallesetEffectRegion(vtkImageData* rawImageData){
+	return rawImageData;
 }

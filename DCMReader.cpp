@@ -1,6 +1,5 @@
 #include "DCMReader.h"
-#include <QDebug>
-#include <string>
+
 /*
 #include "dcmtk/config/osconfig.h"
 #include "dcmtk/dcmdata/dctk.h"
@@ -12,6 +11,12 @@ The directory name is necessary to generate a new DCMRedaer object and the
 object assume the input is a directory, if DCM files is not contained then 
 error will show in the GUI.
 */
+
+
+void DCMReader::StaticUpdate(ReaderType::Pointer reader){
+	reader->Update();
+}
+
 DCMReader::DCMReader(QString file){
 	
 	_filename = file;
@@ -26,30 +31,43 @@ DCMReader::DCMReader(QString file){
 	nameGenerator->SetDirectory(_filename.toStdString());
 	typedef std::vector< std::string >    SeriesIdContainer;
 	const SeriesIdContainer & seriesUID = nameGenerator->GetSeriesUIDs();
-	isFileLoaded = !(seriesUID.empty());
-	qDebug() << isFileLoaded << endl;
-	SeriesIdContainer::const_iterator seriesItr = seriesUID.begin();
+	_isFileLoaded = !(seriesUID.empty());
+	qDebug() << _isFileLoaded << endl;
+	if (true == _isFileLoaded){
+		SeriesIdContainer::const_iterator seriesItr = seriesUID.begin();
 
-	SeriesIdContainer::const_iterator seriesEnd = seriesUID.end();
-	/*while (seriesItr != seriesEnd)
-	{ 
-	qDebug() << seriesItr->c_str() << endl;
-	++seriesItr;
-	}*/
-	std::string seriesIdentifier = seriesUID.begin()->c_str();
-	typedef std::vector< std::string >   FileNamesContainer;
-	FileNamesContainer fileNames;
-	fileNames = nameGenerator->GetFileNames(seriesIdentifier);
-	FileNamesContainer::const_iterator filesItr = fileNames.begin();
-	FileNamesContainer::const_iterator filesEnd = fileNames.end();
-	//while (filesItr != filesEnd)
-	//{
-	//	qDebug() << filesItr->c_str() << endl;
-	//	++filesItr;
-	//}
-	reader->SetFileNames(fileNames);
-	reader->SetImageIO(dicomIO);
-	reader->Update();
+		SeriesIdContainer::const_iterator seriesEnd = seriesUID.end();
+		/*while (seriesItr != seriesEnd)
+		{
+		qDebug() << seriesItr->c_str() << endl;
+		++seriesItr;
+		}*/
+		std::string seriesIdentifier = seriesUID.begin()->c_str();
+		typedef std::vector< std::string >   FileNamesContainer;
+		FileNamesContainer fileNames;
+		fileNames = nameGenerator->GetFileNames(seriesIdentifier);
+		FileNamesContainer::const_iterator filesItr = fileNames.begin();
+		FileNamesContainer::const_iterator filesEnd = fileNames.end();
+		//while (filesItr != filesEnd)
+		//{
+		//	qDebug() << filesItr->c_str() << endl;
+		//	++filesItr;
+		//}
+		reader->SetFileNames(fileNames);
+		reader->SetImageIO(dicomIO);
+		ProgressBase::GetInstance()->Observe(reader.GetPointer());
+		ProgressBase::GetInstance()->show();
+		/*typedef itk::QtSlotAdaptor<ReaderType> SlotAdaptorType;
+		SlotAdaptorType slotAdaptor;
+
+		// Connect the adaptor to a method of the ITK filter
+		slotAdaptor.SetCallbackFunction(reader, &ReaderType::Update);
+*/
+
+		reader->Update();
+		/*std::thread updateThread(StaticUpdate, reader);
+		updateThread.join()*/;
+	}
 	
 	//qDebug()<< "Origin:    " + QString::number(reader->GetOutput()->GetOrigin()[0]) + " " + QString::number(reader->GetOutput()->GetOrigin()[1])
 	//	+ " " + QString::number(reader->GetOutput()->GetOrigin()[2]) << endl;
@@ -139,7 +157,7 @@ std::string DCMReader::FindDicomTag(const std::string & entryId, const itk::GDCM
 To check whether the given directories contains DCM files, if not, return false.
 */
 bool DCMReader::getLoadStatus(){
-	return isFileLoaded;
+	return _isFileLoaded;
 }
 
 

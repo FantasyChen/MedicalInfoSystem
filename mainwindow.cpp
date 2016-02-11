@@ -13,7 +13,8 @@ enum Image_Mode{
 
 enum Error_Type{
 	UNDEFINED_IMAGE = 0,
-	NULL_POINTS
+	NULL_POINTS,
+	NOT_ENOUGH_POINTS
 };
 
 
@@ -22,10 +23,10 @@ mainwindow::mainwindow(QWidget *parent)
 {
 	isFileDisplayed = false;
 	colorMode = SCALAR;
-
 	ui.setupUi(this);
 	this->showMaximized();    //Maximize the window
-	//Connect buttons and triggers
+	_vWindow = new volumewindow;
+	/*------------------------------Handle all the signals and slots--------------------------------*/
 	connect(ui.actionOpenFile, SIGNAL(triggered()), this, SLOT(OpenImageDir()));
 	connect(ui.actionSave, SIGNAL(triggered()), this, SLOT(SaveImageDir()));
 	connect(ui.actionAbout, SIGNAL(triggered()), this, SLOT(ShowAbout()));
@@ -38,16 +39,25 @@ mainwindow::mainwindow(QWidget *parent)
 	connect(ui.segStartButton, SIGNAL(clicked()), this, SLOT(AutoSegmentation()));
 	connect(ui.segStartButton_2, SIGNAL(clicked()), this, SLOT(MannualSegmentation()));
 	connect(ui.calcHerterButton, SIGNAL(clicked()), this, SLOT(CalcHeterogeneity()));
-
-	//Settings
+	connect(ui.vWindonShowButton, SIGNAL(clicked()), this, SLOT(ShowVolumeWindow()));
+	connect(ui.vWindowHideButton, SIGNAL(clicked()), this, SLOT(HideVolumeWindow()));
+	
+	/*----------------------Basic Settings----------------------*/
+	vtkFileOutputWindow *errorOutputWindow = vtkFileOutputWindow::New();
+	errorOutputWindow->SetFileName("errors_log.txt");
+	vtkOutputWindow::SetInstance(errorOutputWindow);
+	errorOutputWindow->Delete();
 	ui.infoTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	ui.stateTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
+	ui.qvtkWidget->hide();
+	ui.qvtkWidget_2->hide();
+	ui.qvtkWidget_3->hide();
+	_vWindow->getQVTKWidget()->hide();
 }
 
 mainwindow::~mainwindow()
 {
-
+	delete _vWindow;
 }
 
 
@@ -62,10 +72,10 @@ void mainwindow::ReadImageDir(){
 	if (NULL!= _imageDir){
 		//extract info
 		pDCM = new DCMReader(_imageDir);
-		//if (true == pDCM->getLoadStatus()){
+		if (true == pDCM->getLoadStatus()){
 			ImageInfo imageinfo = pDCM->getImageInfo();
 
-
+			
 			//show info
 			ui.infoTable->setItem(0, 0, new QTableWidgetItem(QString::fromStdString(imageinfo.patientName)));
 			ui.infoTable->setItem(1, 0, new QTableWidgetItem(QString::fromStdString(imageinfo.patientID)));
@@ -81,7 +91,10 @@ void mainwindow::ReadImageDir(){
 			rawImageData = pDCM->getRawImage();
 			curImageData = rawImageData;
 			ShowImage(curImageData, originIndex);
-		//}
+		}
+		else{
+			OutputError(UNDEFINED_IMAGE);
+		}
 	}
 	else{
 		OutputError(UNDEFINED_IMAGE);
@@ -97,7 +110,7 @@ void mainwindow::SaveImageDir(){
 
 	}
 	else{
-		//error
+		OutputError(UNDEFINED_IMAGE);
 	}
 
 }
@@ -200,19 +213,8 @@ public:
 void mainwindow::ShowImage(vtkImageData* ImageData, CursorDim cursor = CursorDim{ 0.0, 0.0, 0.0 }){
 	if (colorMode == SCALAR || colorMode == COLOR){
 		if (_imageDir != NULL&&pDCM != NULL){
-			/*vtkSmartPointer<vtkImageActor> actor = vtkSmartPointer<vtkImageActor>::New();
-			actor->GetMapper()->SetInputData(pDCM->getRawImage());
-			vtkSmartPointer<vtkRenderer> renderer = vtkSmartPointer<vtkRenderer>::New();
-			renderer->AddActor(actor);
-			renderer->ResetCamera();
-			vtkSmartPointer<vtkRenderWindow> renderWindow = vtkSmartPointer<vtkRenderWindow>::New();
-			renderWindow->AddRenderer(renderer);
-			vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor = vtkSmartPointer<vtkRenderWindowInteractor>::New();
-			vtkSmartPointer<vtkInteractorStyleImage> style = vtkSmartPointer<vtkInteractorStyleImage>::New();
-			renderWindowInteractor->SetInteractorStyle(style);
-			renderWindowInteractor->SetRenderWindow(renderWindow);
-			renderWindowInteractor->Initialize();
-			renderWindowInteractor->Start();*/
+
+
 
 			//Get the basic information of the image
 			ImageData->GetScalarRange(imageRange);
@@ -247,7 +249,6 @@ void mainwindow::ShowImage(vtkImageData* ImageData, CursorDim cursor = CursorDim
 					vtkResliceCursorLineRepresentation::SafeDownCast(
 					riw[i]->GetResliceCursorWidget()->GetRepresentation());
 				riw[i]->SetResliceCursor(riw[0]->GetResliceCursor());
-
 				rep->GetResliceCursorActor()->
 					GetCursorAlgorithm()->SetReslicePlaneNormal(i);
 
@@ -267,10 +268,8 @@ void mainwindow::ShowImage(vtkImageData* ImageData, CursorDim cursor = CursorDim
 
 			vtkSmartPointer< vtkRenderer > ren =
 				vtkSmartPointer< vtkRenderer >::New();
-
-			ui.qvtkWidget_4->GetRenderWindow()->AddRenderer(ren);
-			vtkRenderWindowInteractor *iren = ui.qvtkWidget_4->GetInteractor();
-
+			_vWindow->getQVTKWidget()->GetRenderWindow()->AddRenderer(ren);
+			vtkRenderWindowInteractor *iren = _vWindow->getQVTKWidget()->GetInteractor();
 
 			for (int i = 0; i < 3; i++)
 			{
@@ -304,13 +303,12 @@ void mainwindow::ShowImage(vtkImageData* ImageData, CursorDim cursor = CursorDim
 
 			vtkSmartPointer<vtkResliceCursorCallback> cbk =
 				vtkSmartPointer<vtkResliceCursorCallback>::New();
-
+			cbk->ui = ui;
+			cbk->image = curImageData;
 			for (int i = 0; i < 3; i++)
 			{
 				cbk->IPW[i] = planeWidget[i];
 				cbk->RCW[i] = riw[i]->GetResliceCursorWidget();
-				cbk->ui = ui;
-				cbk->image = curImageData;
 				riw[i]->GetResliceCursorWidget()->AddObserver(
 					vtkResliceCursorWidget::ResliceAxesChangedEvent, cbk);
 				riw[i]->GetResliceCursorWidget()->AddObserver(
@@ -321,8 +319,9 @@ void mainwindow::ShowImage(vtkImageData* ImageData, CursorDim cursor = CursorDim
 					vtkResliceCursorWidget::ResetCursorEvent, cbk);
 				riw[i]->GetInteractorStyle()->AddObserver(
 					vtkCommand::WindowLevelEvent, cbk);
+				riw[i]->GetInteractorStyle()->GetInteractor()->ConfigureEvent();
 				if (colorMode == SCALAR){
-					// Make them all share the same color map.
+					// Make them all share the same color map
 					riw[i]->SetLookupTable(riw[0]->GetLookupTable());
 					planeWidget[i]->GetColorMap()->SetLookupTable(riw[0]->GetLookupTable());
 					//planeWidget[i]->GetColorMap()->SetInput(riw[i]->GetResliceCursorWidget()->GetResliceCursorRepresentation()->GetColorMap()->GetInput());
@@ -370,11 +369,15 @@ void mainwindow::ShowImage(vtkImageData* ImageData, CursorDim cursor = CursorDim
 			double *curCenter = riw[0]->GetResliceCursor()->GetCenter();
 			ui.stateTable->setItem(5, 0, new QTableWidgetItem(QString::number(curCenter[0]) + " ," + QString::number(curCenter[1])
 				+ " ," + QString::number(curCenter[2])));
-			ui.qvtkWidget_4->GetRenderWindow()->Render();
+			_vWindow->getQVTKWidget()->GetRenderWindow()->Render();
 			ui.ResliceModeBox->setEnabled(1);
 			ui.ThickModeBox->setEnabled(0);
 			isFileDisplayed = true;
 			ShowStatistics();
+			ui.qvtkWidget->show();
+			ui.qvtkWidget_2->show();
+			ui.qvtkWidget_3->show();
+			_vWindow->getQVTKWidget()->show();
 		}
 	}
 }
@@ -404,10 +407,13 @@ void mainwindow::ChangeToRGBColorMap(int mode){
 			colorMap->SetLookupTable(colorTable);
 			colorMap->Update();
 			colorMode = COLOR;
+			ui.ResliceModeBox->setCheckState(Qt::Unchecked);
+			ui.ResliceModeBox->setEnabled(0);
 			ShowImage(colorMap->GetOutput());
 		}
 		else{
 			colorMode = SCALAR;
+			ui.ResliceModeBox->setEnabled(1);
 			ShowImage(curImageData);
 		}
 	}
@@ -471,7 +477,7 @@ void mainwindow::ResetViews()
 		riw[i]->GetRenderer()->ResetCamera();
 		riw[i]->Render();
 	}
-	ui.qvtkWidget_4->GetRenderWindow()->Render();
+	_vWindow->getQVTKWidget()->GetRenderWindow()->Render();
 }
 
 void mainwindow::ThickMode(int mode)
@@ -487,13 +493,18 @@ void mainwindow::ThickMode(int mode)
 }
 
 void mainwindow::AddSeed(){
-	CursorDim cursor;
-	cursor._x = riw[0]->GetResliceCursor()->GetCenter()[0];
-	cursor._y = riw[0]->GetResliceCursor()->GetCenter()[1];
-	cursor._z = riw[0]->GetResliceCursor()->GetCenter()[2];
-	_index.push_back(cursor);
-	ui.seedTextBrowser->append(QString::number(cursor._x) + " " + QString::number(cursor._y) + " " + QString::number(cursor._z)); //Show the location of seeds in the window.
-/*
+	if (NULL != curImageData){
+		CursorDim cursor;
+		cursor._x = riw[0]->GetResliceCursor()->GetCenter()[0];
+		cursor._y = riw[0]->GetResliceCursor()->GetCenter()[1];
+		cursor._z = riw[0]->GetResliceCursor()->GetCenter()[2];
+		_index.push_back(cursor);
+		ui.seedTextBrowser->append(QString::number(cursor._x) + " " + QString::number(cursor._y) + " " + QString::number(cursor._z)); //Show the location of seeds in the window.
+	}
+	else{
+		OutputError(UNDEFINED_IMAGE);
+	}
+	/*
 	vtkSmartPointer<vtkSphereSource> sphereSource = 																		//Add a sphere to indicate the location of points
 		vtkSmartPointer<vtkSphereSource>::New();
 	sphereSource->SetCenter(cursor._x, cursor._y, cursor._z);
@@ -517,36 +528,42 @@ void mainwindow::RemoveSeed(){
 		pBrowser->setTextCursor(storeCursorPos);
 		
 	}
+	else{
+		OutputError(NULL_POINTS);
+	}
 }
 
 
 void mainwindow::AutoSegmentation(){
-	ROISegmentation *ROISeg = new ROISegmentation(pDCM);
-	ROISeg->setRegionGrowSeeds(_index);
-	vtkImageData * ROIImageData;
-	if (true == ui.regionRadioButton->isChecked()&&!_index.empty()){
-		ROIImageData = ROISeg->startROISegmentation(1);
-	}
-	else if (true == ui.thresholdRadioButton->isChecked()&&!_index.empty()){
-		ROIImageData = ROISeg->startROISegmentation(2);
+	if (NULL != curImageData){
+		ROISegmentation *ROISeg = new ROISegmentation(pDCM);
+		ROISeg->setRegionGrowSeeds(_index);
+		vtkImageData * ROIImageData;
+		if (true == ui.regionRadioButton->isChecked() && !_index.empty()){
+			ROIImageData = ROISeg->startROISegmentation(1);
+		}
+		else if (true == ui.thresholdRadioButton->isChecked() && !_index.empty()){
+			ROIImageData = ROISeg->startROISegmentation(2);
+		}
+		else{
+			OutputError(NULL_POINTS);
+		}
+		if (ROIImageData != NULL){
+			int newDims[3];
+			ROIImageData->GetDimensions(newDims);
+			//ui.debugBrowser->append("RegionDIMS:    " + QString::number(newDims[0]) + " " + QString::number(newDims[1]) + " " + QString::number(newDims[2]));
+			CursorDim cursor;
+			cursor._x = riw[0]->GetResliceCursor()->GetCenter()[0];
+			cursor._y = riw[0]->GetResliceCursor()->GetCenter()[1];
+			cursor._z = riw[0]->GetResliceCursor()->GetCenter()[2];
+			curImageData = ROIImageData;
+			ui.seedTextBrowser->clear();
+			_index.clear();
+			ShowImage(curImageData);
+		}
 	}
 	else{
-		QMessageBox msgBox;
-		msgBox.setText("Please choose a method and at least one Seed Point before Segmentation\n");
-		msgBox.exec();
-	}
-	if (ROIImageData != NULL){
-		int newDims[3];
-		ROIImageData->GetDimensions(newDims);
-		//ui.debugBrowser->append("RegionDIMS:    " + QString::number(newDims[0]) + " " + QString::number(newDims[1]) + " " + QString::number(newDims[2]));
-		CursorDim cursor;
-		cursor._x = riw[0]->GetResliceCursor()->GetCenter()[0];
-		cursor._y = riw[0]->GetResliceCursor()->GetCenter()[1];
-		cursor._z = riw[0]->GetResliceCursor()->GetCenter()[2];
-		curImageData = ROIImageData;
-		ui.seedTextBrowser->clear();
-		_index.clear();
-		ShowImage(curImageData);
+		OutputError(UNDEFINED_IMAGE);
 	}
 }
 
@@ -709,18 +726,22 @@ void mainwindow::ShowStatistics(){
 
 //Uniform all the error message. Throw error message box according to error type.
 void mainwindow::OutputError(int errorType){
-	QMessageBox errorMsg;
+	QMessageBox errorMsg("Warning", " ", QMessageBox::Warning, QMessageBox::Ok,QMessageBox::NoButton,QMessageBox::NoButton);
 	switch (errorType){
 	case UNDEFINED_IMAGE:
-		errorMsg.setText("Undefined Image!");
+		errorMsg.setText("Please import the original images before processing.");
 		break;
 	case NULL_POINTS:
-		errorMsg.setText("Error Points!");
+		errorMsg.setText("Please choose at least one Seed Point before Segmentation or Removement. \n"); 
+		break;
+	case NOT_ENOUGH_POINTS: //TODO
+		errorMsg.setText("Please choose at least six points to define the ROI.");
+		break;
 	default:
 		errorMsg.setText("Error");
 		break;
-		errorMsg.exec();
 	}
+	errorMsg.exec();
 }
 
 
@@ -738,6 +759,17 @@ void mainwindow::CalcHeterogeneity(){
 
 
 void mainwindow::ShowAbout(){
-	QMessageBox aboutMsg;
+	QMessageBox aboutMsg("Critical", "", QMessageBox::Warning, QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton);
+	aboutMsg.setText("Developed by Fantasy Chen at MGH/Harvard in 2016. \n\n\n\n\n\n\nFor further information, please follow the git-hub.\n https://github.com/FantasyChen/MedicalInfoSystem");
+	aboutMsg.exec();
+}
 
+
+void mainwindow::ShowVolumeWindow(){
+	_vWindow->show();
+	//volumeWidget->show();
+}
+
+void mainwindow::HideVolumeWindow(){
+	_vWindow->hide();
 }
